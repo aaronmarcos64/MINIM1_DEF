@@ -25,9 +25,9 @@ public class MathManagerTest {
         Estudiante aa = new Estudiante("E1","Aaron","I1");
         Estudiante to = new Estudiante("E2","Toni","I1");
         Estudiante ye = new Estudiante("E3","Yerald","I2");
-        this.bm.añadirEstudiante(aa,"I1");
-        this.bm.añadirEstudiante(to,"I1");
-        this.bm.añadirEstudiante(ye,"I2");
+        this.bm.añadirEstudiante(aa);
+        this.bm.añadirEstudiante(to);
+        this.bm.añadirEstudiante(ye);
         Operacion op1 = new Operacion("op1", "5 1 2 + 4 * + 3 -",null, "E1", "I1");
         Operacion op2 = new Operacion("op2", "3 2 +",null, "E2", "I1");
         Operacion op3 = new Operacion("op3", "4 2 *",null, "E3", "I2");

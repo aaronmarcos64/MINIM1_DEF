@@ -13,12 +13,14 @@ public class MathManagerImpl implements MathManager {
     final static Logger logger = Logger.getLogger(MathManagerImpl.class.getName());
 
     private Queue<Operacion> operaciones;
+    private List<Operacion> historialOperaciones;
     private Map<String, Estudiante> estudiantes;
     private Map<String, Instituto> institutos;
 
 
     private MathManagerImpl() {
         this.operaciones = new LinkedList<>();
+        this.historialOperaciones = new ArrayList<>();
         this.institutos = new HashMap<>();
         this.estudiantes = new HashMap<>();
     }
@@ -31,14 +33,13 @@ public class MathManagerImpl implements MathManager {
     }
 
     @Override
-    public void añadirEstudiante(Estudiante estudiante, String idInstituto){
-
+    public void añadirEstudiante(Estudiante estudiante){
+        logger.info("Añadiendo al estudiante: " + estudiante.getNombre());
         estudiantes.put(estudiante.getId(), estudiante);
-        Instituto instituto = institutos.get(idInstituto);
-        instituto.addEstudiante(estudiante);
     }
     @Override
     public void añadirInstituto(Instituto instituto){
+        logger.info("Añadiendo el instituto: " + instituto.getName());
         institutos.put(instituto.getId(), instituto);
     }
 
@@ -65,66 +66,69 @@ public class MathManagerImpl implements MathManager {
         // llamar al polish notation, asignamos el valor de la expresion de ejemplo
         Double resultadoCalculado = 14.0;
         op.setResultado(resultadoCalculado);
-
-        Estudiante est = estudiantes.get(op.getIdEstudiante());
-        if (est != null) {
-            est.getOperacionesTerminadas().add(op);
-        }
-
-        Instituto inst = institutos.get(op.getIdInstituto());
-        if (inst != null) {
-            inst.getOperacionesTerminadas().add(op);
-        }
-
+        historialOperaciones.add(op);
         logger.info("Operación " + op.getId() + " procesada con resultado=" + resultadoCalculado);
         return op;
     }
 
     @Override
     public List<Operacion> getOperacionesPorInstituto(String idInstituto) {
-        logger.info("Obeteniendo operaciones del instituoto idInstituto=" + idInstituto);
-
-        Instituto u = institutos.get(idInstituto);
-        if (u != null) {
-            logger.info("Se ha devuelto la lista correctamente");
-            return u.getOperacionesTerminadas();
-
+        logger.info("Obteniendo operaciones del instituto idInstituto=" + idInstituto);
+        List<Operacion> ls = new ArrayList<>();
+        for (Operacion o : historialOperaciones) {
+            if (o.getIdInstituto().equals(idInstituto)) {
+                ls.add(o);
+            }
         }
-        logger.info("Se ha devuelto lista vacia");
-        return new ArrayList<>();
+        logger.info("Se ha devuelto la lista correctamente" + ls.size());
+        return ls;
     }
 
     @Override
-    public List<Operacion> getOperacionesPorEstudiante(String idEstudiante) {
+    public List<Operacion> getOperacionesPorEstudiante (String idEstudiante) {
         logger.info("Obteniendo operaciones del estudiante idEstudiante=" + idEstudiante);
-        Estudiante e = estudiantes.get(idEstudiante);
-        if (e != null) {
-            logger.info("Se ha devuelto la lista correctamente");
-            return e.getOperacionesTerminadas();
+        List<Operacion> lu = new ArrayList<>();
+        for (Operacion o: historialOperaciones) {
+            if (o.getIdEstudiante().equals(idEstudiante)) {
+                lu.add(o);
+            }
         }
-        logger.info("Se ha devuelto lista vacia");
-        return new ArrayList<>();
+        logger.info("Se ha devuelto la lista correctamente" + lu.size());
+        return lu;
     }
 
     @Override
     public List<Instituto> getInstitutosOrdenadosPorOperaciones() {
-        logger.info("Obteniendo institutos");
+        logger.info("Obteniendo institutos ordenados por operaciones");
+        Map<String, Integer> counter = new HashMap<>();
+        for (String idInstituto : institutos.keySet()) {
+            counter.put(idInstituto, 0);
+        }
+        for (Operacion op : operaciones) {
+            String idInst = op.getIdInstituto();
+            if (counter.containsKey(idInst)) {
+                counter.put(idInst, counter.get(idInst) + 1);
+            }
+        }
         List<Instituto> sortedList = new ArrayList<>(this.institutos.values());
         sortedList.sort(new Comparator<Instituto>() {
             @Override
-            public int compare(Instituto u1, Instituto u2) {
-                return Double.compare(u2.getOperacionesTerminadas().size(), u1.getOperacionesTerminadas().size());
+            public int compare(Instituto i1, Instituto i2) {
+                // Orden descendente (de mayor a menor)
+                Integer count1 = counter.get(i1.getId());
+                Integer count2 = counter.get(i2.getId());
+                return count2.compareTo(count1); // Cambia el orden de count1 y count2 para ascendente
             }
         });
 
         logger.info("Lista ordenada y devuelta.");
         return sortedList;
     }
-
     @Override
     public void clear() {
         this.operaciones.clear();
         this.institutos.clear();
         this.estudiantes.clear();
+        this.historialOperaciones.clear();
     }
 }

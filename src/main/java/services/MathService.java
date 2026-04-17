@@ -28,15 +28,15 @@ public class MathService {
     @POST
     @ApiOperation(value = "Afegir un nou estudiant")
     @Path("/estudiant")
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addEstudiant(Estudiante estudiante) {
-        this.bm.añadirEstudiante(estudiante,  estudiante.getId());
+        this.bm.añadirEstudiante(estudiante);
         return Response.status(201).build();
     }
     @POST
     @ApiOperation(value = "Afegir un nou institut")
     @Path("/institut")
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addInstitut(Instituto instituto) {
         this.bm.añadirInstituto(instituto);
         return Response.status(201).build();
@@ -80,6 +80,16 @@ public class MathService {
     public Response getOperacionesInstituto(@PathParam("idInstituto") String idInstituto) {
         List<Operacion> lista = this.bm.getOperacionesPorInstituto(idInstituto);
         GenericEntity<List<Operacion>> entity = new GenericEntity<List<Operacion>>(lista) {};
+        return Response.status(200).entity(entity).build();
+    }
+
+    @GET
+    @ApiOperation(value = "Consultar institutos ordenados por operaciones")
+    @Path("/institutos/ordenados")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInstitutosOrdenados() {
+        List<Instituto> lista = this.bm.getInstitutosOrdenadosPorOperaciones();
+        GenericEntity<List<Instituto>> entity = new GenericEntity<List<Instituto>>(lista) {};
         return Response.status(200).entity(entity).build();
     }
 

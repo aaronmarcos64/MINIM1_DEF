@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MathManager {
 
-    void añadirEstudiante(Estudiante estudiante, String idInstituto);
+    void añadirEstudiante(Estudiante estudiante);
 
     void añadirInstituto(Instituto instituto);
 
