@@ -1,5 +1,7 @@
 package manager;
 
+import components.ReversePolishNotation;
+import components.ReversePolishNotationImpl;
 import models.Instituto;
 import models.Operacion;
 import models.Estudiante;
@@ -10,6 +12,7 @@ import java.util.*;
 
 public class MathManagerImpl implements MathManager {
     private static MathManager instance;
+    private ReversePolishNotation calculadora;
     final static Logger logger = Logger.getLogger(MathManagerImpl.class.getName());
 
     private Queue<Operacion> operaciones;
@@ -23,6 +26,7 @@ public class MathManagerImpl implements MathManager {
         this.historialOperaciones = new ArrayList<>();
         this.institutos = new HashMap<>();
         this.estudiantes = new HashMap<>();
+        this.calculadora = new ReversePolishNotationImpl();
     }
 
     public static MathManager getInstance() {
@@ -64,7 +68,7 @@ public class MathManagerImpl implements MathManager {
         Operacion op = operaciones.poll();
 
         // llamar al polish notation, asignamos el valor de la expresion de ejemplo
-        Double resultadoCalculado = 14.0;
+        Double resultadoCalculado = calculadora.calcular(op.getExpression());
         op.setResultado(resultadoCalculado);
         historialOperaciones.add(op);
         logger.info("Operación " + op.getId() + " procesada con resultado=" + resultadoCalculado);

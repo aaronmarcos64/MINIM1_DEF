@@ -48,10 +48,11 @@ public void testProcesarOperaciones() {
 
     Operacion procesada1 = bm.procesarSiguienteOperacion();
     Assert.assertEquals("op1", procesada1.getId());
-    Assert.assertEquals(Double.valueOf(14.0), procesada1.getResultado()); // Usamos el valor estático que asignaste
+    Assert.assertEquals(Double.valueOf(14.0), procesada1.getResultado());
 
     Operacion procesada2 = bm.procesarSiguienteOperacion();
     Assert.assertEquals("op2", procesada2.getId());
+    Assert.assertEquals(Double.valueOf(5.0), procesada2.getResultado());
 }
 
 @Test
@@ -67,10 +68,9 @@ public void testListadosPorInstitutoYEstudiante() {
     List<Operacion> opsInst2 = bm.getOperacionesPorInstituto("I2");
     Assert.assertEquals(1, opsInst2.size());
 
-    // Test listado por Estudiante
-    List<Operacion> opsJuan = bm.getOperacionesPorEstudiante("E1");
-    Assert.assertEquals(1, opsJuan.size());
-    Assert.assertEquals("op1", opsJuan.get(0).getId());
+    List<Operacion> opsAaron = bm.getOperacionesPorEstudiante("E1");
+    Assert.assertEquals(1, opsAaron.size());
+    Assert.assertEquals("op1", opsAaron.get(0).getId());
 }
 
 @Test
